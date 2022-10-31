@@ -15,6 +15,8 @@ export class User {
   user_salt: string;
   @Prop({ required: true })
   name: string;
+  @Prop()
+  finger_register: boolean;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
