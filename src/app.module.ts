@@ -13,6 +13,7 @@ import { MqttModule } from 'nest-mqtt';
 import { IotModule } from './room/room.module';
 import { APP_GUARD } from '@nestjs/core';
 import { RolesGuard } from './auth/guards/roles.guard';
+import { SocketModule } from './socket/socket.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { RolesGuard } from './auth/guards/roles.guard';
     RollCallModule,
     AuthModule,
     IotModule,
+    SocketModule,
   ],
   controllers: [AppController],
   providers: [AppService],
