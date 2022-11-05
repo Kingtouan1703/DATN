@@ -11,6 +11,8 @@ import { RollCallModule } from './roll-call/roll-call.module';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { MqttModule } from 'nest-mqtt';
 import { IotModule } from './room/room.module';
+import { APP_GUARD } from '@nestjs/core';
+import { RolesGuard } from './auth/guards/roles.guard';
 
 @Module({
   imports: [

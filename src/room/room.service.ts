@@ -1,4 +1,5 @@
 import { Injectable, Inject, Query } from '@nestjs/common';
+import { Reflector } from '@nestjs/core';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Subscribe, Payload, Topic } from 'nest-mqtt';
@@ -17,10 +18,9 @@ export class IotService {
 
   async testPublish(query) {
     const { msg } = query;
-    const res = await this.mqttService.publish('testtopic/1', {
+    await this.mqttService.publish('testtopic/1', {
       foo: msg,
     });
-    console.log(res);
     return {
       data: 'pub success',
     };
