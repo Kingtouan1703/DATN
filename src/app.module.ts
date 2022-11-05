@@ -10,7 +10,7 @@ import { LocalStrategy } from './auth/local.strategy';
 import { RollCallModule } from './roll-call/roll-call.module';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { MqttModule } from 'nest-mqtt';
-import { IotModule } from './iot/iot.module';
+import { IotModule } from './room/room.module';
 
 @Module({
   imports: [
