@@ -25,7 +25,11 @@ export class AuthService {
     return null;
   }
   async login(user: any) {
-    const payload = { username: user._doc.username, sub: user._doc._id ,roles : user._doc.roles};
+    const payload = {
+      username: user._doc.username,
+      sub: user._doc._id,
+      roles: user._doc.roles,
+    };
     return {
       msg: 'login success',
       data: {
@@ -64,7 +68,9 @@ export class AuthService {
         };
       }
     } catch (error) {
-      console.log(error);
+      return {
+        error: error,
+      };
     }
   }
 }

@@ -7,7 +7,7 @@ export class RollcallController {
 
   @Post('register')
   registerFingerprints(@Body() body) {
-    return this.rollCallServices.register(body);
+    return this.rollCallServices.registerOnline(body);
   }
 
   @Post('attendance')

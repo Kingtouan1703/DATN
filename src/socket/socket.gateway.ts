@@ -8,6 +8,7 @@ import {
 } from '@nestjs/websockets';
 import { MqttService, Subscribe, Payload } from 'nest-mqtt';
 import { Server } from 'socket.io';
+import { AttendancePayload, LeavePayload, RollCallTopic } from 'src/roll-call/topic/topic';
 import { RoomSensorPayload, RoomTopic } from 'src/room/topic/room.topic';
 
 @WebSocketGateway({ cors: '*:*' })
@@ -27,5 +28,13 @@ export class SocketGateway implements OnGatewayInit {
   @Subscribe(RoomTopic.SUB_SENSOR)
   emitTest(@Payload() payload: RoomSensorPayload) {
     this.server.sockets.emit('room_sensor', payload);
+  }
+  @Subscribe(RollCallTopic.ATTENDACE)
+  IncreaseUsers(@Payload() payload: AttendancePayload) {
+    this.server.sockets.emit('user_amount', payload);
+  }
+  @Subscribe(RollCallTopic.LEAVE)
+  DecreaseUsers(@Payload() payload: LeavePayload) {
+    this.server.sockets.emit('user_amount', payload);
   }
 }

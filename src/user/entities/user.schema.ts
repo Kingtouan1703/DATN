@@ -19,6 +19,8 @@ export class User {
   @Prop()
   finger_register: boolean;
   @Prop()
+  can_use_finger: boolean;
+  @Prop()
   roles: Role[];
 }
 

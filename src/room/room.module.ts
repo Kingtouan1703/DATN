@@ -10,5 +10,6 @@ import { IotService } from './room.service';
   ],
   controllers: [IotController],
   providers: [IotService],
+  
 })
 export class IotModule {}
