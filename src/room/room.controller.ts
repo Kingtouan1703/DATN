@@ -27,4 +27,8 @@ export class IotController {
   async createRoom(@Body() creatRoom: CreateRoomDto) {
     return this.iotService.createRoom(creatRoom);
   }
+  @Get('room-info')
+  async getRoomInfo() {
+    return this.iotService.getRoomInfo();
+  }
 }

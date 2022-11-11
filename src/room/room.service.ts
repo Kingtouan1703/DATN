@@ -68,6 +68,19 @@ export class IotService {
     }
     console.log('update led info');
   }
+  async getRoomInfo() {
+    try {
+      const data = await this.roomModel.find({ name: 'room_1' });
+      return {
+        msg: 'get room data success',
+        status: 200,
+        data: data,
+      };
+    } catch (error) {
+      throw error;
+    }
+  }
+
   // room humi  and temp
   @Subscribe(RoomTopic.SUB_SENSOR)
   async getRoomHumilit(@Payload() payload: RoomSensorPayload) {
