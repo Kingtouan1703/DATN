@@ -4,7 +4,7 @@ import { CreateRoomDto } from './dto/create-room.dto';
 import { IotService } from './room.service';
 import {RolesGuard} from '../auth/guards/roles.guard'
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
-import { Roles } from 'src/auth/role/roles.decorator';
+import { Roles, ROLES_KEY } from 'src/auth/role/roles.decorator';
 import { Role } from 'src/auth/role/role.enum';
 @UseGuards(JwtAuthGuard)
 @Controller('room')
@@ -17,7 +17,8 @@ export class IotController {
   async get(@Query() query) {
     return this.iotService.testPublish(query);
   }
-
+  @UseGuards(RolesGuard)
+  @Roles(Role.Admin)
   @Get('controll-led')
   async turnLed(@Query() query: ControllLEDDTo) {
     return this.iotService.ControllLED(query);

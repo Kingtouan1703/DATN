@@ -18,10 +18,10 @@ import { SocketModule } from './socket/socket.module';
 @Module({
   imports: [
     MqttModule.forRoot({
-      host: 'dfbd389814bd4a7a9897038c99700f75.s2.eu.hivemq.cloud',
+      host: '78c415f89ff6429d919a8bf55b487641.s1.eu.hivemq.cloud',
       port: 8883,
       username: 'redutdep13',
-      password: 'redutdep17',
+      password: 'redutdep1703',
       protocol: 'mqtts',
     }),
     ConfigModule.forRoot(),

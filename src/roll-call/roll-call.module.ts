@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Room, RoomSchema } from 'src/room/entities/room.schema';
+import { SocketModule } from 'src/socket/socket.module';
 import { User, UserSchema } from 'src/user/entities/user.schema';
 import { RollCall, RollCallSchema } from './entities/roll-call.schema';
 import { RollcallController } from './roll-call.controller';
@@ -11,6 +12,7 @@ import { RollCallServices } from './roll-call.service';
     MongooseModule.forFeature([{ name: Room.name, schema: RoomSchema }]),
     MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
     MongooseModule.forFeature([{ name: RollCall.name, schema: RollCallSchema }]),
+    SocketModule,
   ],
   controllers: [RollcallController],
   providers: [RollCallServices],

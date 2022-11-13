@@ -4,6 +4,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Subscribe, Payload, Topic } from 'nest-mqtt';
 import { MqttService } from 'nest-mqtt';
+import { SocketGateway } from 'src/socket/socket.gateway';
 import { ControllLEDDTo } from './dto/controll-led.dto';
 import { CreateRoomDto } from './dto/create-room.dto';
 import { Room, RoomDocument } from './entities/room.schema';
@@ -12,6 +13,7 @@ import { RoomSensorPayload, RoomTopic } from './topic/room.topic';
 @Injectable()
 export class IotService {
   constructor(
+    private  socketGateWay: SocketGateway,
     @Inject(MqttService) private readonly mqttService: MqttService,
     @InjectModel(Room.name) private roomModel: Model<RoomDocument>,
   ) {}
@@ -27,7 +29,8 @@ export class IotService {
   }
   @Subscribe('testtopic/1')
   getSubTest(@Payload() payload) {
-    console.log(payload);
+    console.log(this.socketGateWay.server.emit('test_message' ,'import success'))
+    console.log(payload , 'testtopic/1');
     return {
       data: payload,
     };
@@ -48,6 +51,7 @@ export class IotService {
   // just one room had name room_1
   // controll led
   async ControllLED(@Query() query: ControllLEDDTo) {
+    console.log('controlled')
     try {
       await this.mqttService.publish(
         'home/room/led',
@@ -60,8 +64,8 @@ export class IotService {
         }
         return led;
       });
-      console.log(updateLed);
       await this.roomModel.updateOne({ name: 'room_1' }, { leds: updateLed });
+      this.socketGateWay.server.emit('led_change', updateLed)
     } catch (error) {
       console.log(error);
       return error;
@@ -82,14 +86,16 @@ export class IotService {
   }
 
   // room humi  and temp
-  @Subscribe(RoomTopic.SUB_SENSOR)
+  @Subscribe('home/room/sensor')
   async getRoomHumilit(@Payload() payload: RoomSensorPayload) {
+    console.log(payload)
     try {
       const update = {
         humidity: +payload.hum,
         temperature: +payload.temp,
       };
-      await this.roomModel.findOneAndUpdate({ name: 'room_1' }, update);
+       await this.roomModel.findOneAndUpdate({ name: 'room_1' }, update);
+       this.socketGateWay.server.emit('room_sensor', payload)
     } catch (error) {
       console.log(error);
     }

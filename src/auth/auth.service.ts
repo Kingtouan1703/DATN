@@ -35,7 +35,7 @@ export class AuthService {
       data: {
         username: user._doc.username,
         name: user._doc.name,
-        finger_register: user._doc.finger_register,
+        _id: user._doc._id,
       },
 
       access_token: this.jwtService.sign(payload),

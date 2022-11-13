@@ -3,6 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { MqttService, Payload, Subscribe } from 'nest-mqtt';
 import { Room, RoomDocument } from 'src/room/entities/room.schema';
+import { SocketGateway } from 'src/socket/socket.gateway';
 import { User, UserDocument } from 'src/user/entities/user.schema';
 import { RollCall, RollCallDocument } from './entities/roll-call.schema';
 import {
@@ -15,6 +16,7 @@ import {
 @Injectable()
 export class RollCallServices {
   constructor(
+    private readonly socketGateway : SocketGateway,
     @InjectModel(Room.name) private roomModel: Model<RoomDocument>,
     @Inject(MqttService) private readonly mqttService: MqttService,
     @InjectModel(User.name) private userModel: Model<UserDocument>,
@@ -85,7 +87,7 @@ export class RollCallServices {
   async rollCallTime(query) {
     const time = await this.rollcallModel.find({ user_id: query.user_id });
     return {
-      data: time.length,
+      data: time,
       code: 200,
       msg: 'success',
     };
@@ -116,6 +118,7 @@ export class RollCallServices {
       { name: 'room_1' },
       { $inc: { amount_gymers: 1 } },
     );
+    this.socketGateway.server.emit('user_amount')
     if (checkLogin[0]) {
       console.log('attendace today');
       return;
@@ -134,10 +137,12 @@ export class RollCallServices {
         { name: 'room_1' },
         { $inc: { amount_gymers: -1 } },
       );
+      this.socketGateway.server.emit('user_amount')
     } catch (error) {
       console.log(error);
       throw error;
     }
+    
     console.log(' one user  leave');
   }
 }
