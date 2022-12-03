@@ -11,3 +11,8 @@ export class ControllLEDDTo {
   @IsEnum(StateEnum, { message: 'Led state must be ON or OFF' })
   state;
 }
+
+export class ControllFan {
+  @IsEnum(StateEnum, { message: 'State must be ON or OFF' })
+  state;
+}

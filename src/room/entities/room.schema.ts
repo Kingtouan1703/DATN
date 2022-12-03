@@ -15,8 +15,16 @@ export class Room {
 
   @Prop({ required: true })
   humidity: number;
+
+  @Prop({ required: true })
+  air_condition_state: 'ON' | 'OFF';
+
+  @Prop({ required: true })
+  fan_state: 'ON' | 'OFF';
+
   @Prop({ required: true })
   temperature: number;
+
   @Prop()
   amount_gymers: number;
 }
