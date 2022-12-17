@@ -15,9 +15,10 @@ export class RolesGuard implements CanActivate {
       return true;
     }
     const { user } = context.switchToHttp().getRequest();
+    console.log(user)
     const check = requireRoles.some((role) => user.roles.includes(role));
     if(!check){
-      throw new HttpException('Only Gyms Master can controll led', HttpStatus.FORBIDDEN);
+      throw new HttpException('Not Allowed', HttpStatus.FORBIDDEN);
     }
     return true;
   }

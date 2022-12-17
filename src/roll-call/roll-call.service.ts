@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { MqttService, Payload, Subscribe } from 'nest-mqtt';
@@ -37,9 +37,10 @@ export class RollCallServices {
       const record = await this.checkFingerprint(user_id);
       console.log(record);
       if (record.finger_register) {
+        
         return {
-          msg: 'user had registered',
-          code: 400,
+          msg: 'Already Registered online!',
+          status: 403,
         };
       }
       // neu thanh cong dang ki voi module as608
@@ -55,7 +56,7 @@ export class RollCallServices {
     }
     return {
       code: 200,
-      msg: 'Register Fingerprint on line  succces ,  go register offline to complete',
+      msg: 'Register Fingerprint on line succces ,go register offline to complete',
     };
   }
 
