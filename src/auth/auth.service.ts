@@ -54,11 +54,13 @@ export class AuthService {
       const salt_round = process.env.SALT_ROUND;
       const user_salt = await bcrypt.genSalt(+salt_round);
       const password_hash = await bcrypt.hash(body.password, user_salt);
+      const user_lenght = await this.userModel.count();
       const result = await this.userModel.create({
         name: body.name,
         password_hash: password_hash,
         user_salt: user_salt,
         username: body.username,
+        user_index: user_lenght + 1,
       });
       if (result) {
         return {

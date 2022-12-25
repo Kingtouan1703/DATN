@@ -144,7 +144,7 @@ export class IotService {
   // room humi  and temp
   @Subscribe('home/room/sensor')
   async getRoomHumilit(@Payload() payload: RoomSensorPayload) {
-    console.log(payload);
+    // console.log(payload);
     try {
       const update = {
         humidity: +payload.hum,
@@ -155,6 +155,6 @@ export class IotService {
     } catch (error) {
       console.log(error);
     }
-    console.log('update room info');
+    // console.log('update room info');
   }
 }

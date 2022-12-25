@@ -22,6 +22,8 @@ export class User {
   can_use_finger: boolean;
   @Prop()
   roles: Role[];
+  @Prop()
+  user_index: number;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

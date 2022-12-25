@@ -14,6 +14,7 @@ export class RollcallController {
  
   @Post('register')
   registerFingerprints(@Body() body) {
+    console.log(body ,12312313131)
     return this.rollCallServices.registerOnline(body);
   }
 

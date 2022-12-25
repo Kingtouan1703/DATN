@@ -16,7 +16,7 @@ import {
 @Injectable()
 export class RollCallServices {
   constructor(
-    private readonly socketGateway : SocketGateway,
+    private readonly socketGateway: SocketGateway,
     @InjectModel(Room.name) private roomModel: Model<RoomDocument>,
     @Inject(MqttService) private readonly mqttService: MqttService,
     @InjectModel(User.name) private userModel: Model<UserDocument>,
@@ -32,12 +32,13 @@ export class RollCallServices {
   }
 
   async registerOnline(registerDTO) {
-    const { user_id } = registerDTO;
+    const { user_index } = registerDTO;
+    console.log(user_index)
     try {
-      const record = await this.checkFingerprint(user_id);
-      console.log(record);
-      if (record.finger_register) {
-        
+      // const record = await this.checkFingerprint(user_id);
+      const user = await this.userModel.findOne({ user_index: user_index });
+      console.log(user);
+      if (user.finger_register) {
         return {
           msg: 'Already Registered online!',
           status: 403,
@@ -45,12 +46,11 @@ export class RollCallServices {
       }
       // neu thanh cong dang ki voi module as608
       await this.userModel.findOneAndUpdate(
-        { _id: user_id },
+        { user_index: user_index },
         { finger_register: true },
       );
-      await this.mqttService.publish(RollCallTopic.REGISTER, {
-        user_id: user_id,
-      });
+      await this.mqttService.publish(RollCallTopic.REGISTER, user_index.toString());
+      console.log('mqtt');
     } catch (error) {
       console.log(error);
     }
@@ -109,7 +109,8 @@ export class RollCallServices {
   @Subscribe(RollCallTopic.ATTENDACE)
   async rollCall(@Payload() payload: AttendancePayload) {
     const { user_id, timestamp } = payload;
-    const date = new Date(+timestamp);
+    const date = new Date(timestamp);
+    console.log(date)
     date.setHours(0, 0, 0, 0);
     const checkLogin = await this.rollcallModel.find({
       user_id: user_id,
@@ -119,7 +120,7 @@ export class RollCallServices {
       { name: 'room_1' },
       { $inc: { amount_gymers: 1 } },
     );
-    this.socketGateway.server.emit('user_amount')
+    this.socketGateway.server.emit('user_amount');
     if (checkLogin[0]) {
       console.log('attendace today');
       return;
@@ -130,6 +131,7 @@ export class RollCallServices {
     });
 
     console.log('user attendace success');
+    console.log(timestamp);
   }
   @Subscribe(RollCallTopic.LEAVE)
   async getUsernumber(@Payload() payload: LeavePayload) {
@@ -138,12 +140,12 @@ export class RollCallServices {
         { name: 'room_1' },
         { $inc: { amount_gymers: -1 } },
       );
-      this.socketGateway.server.emit('user_amount')
+      this.socketGateway.server.emit('user_amount');
     } catch (error) {
       console.log(error);
       throw error;
     }
-    
+
     console.log(' one user  leave');
   }
 }
